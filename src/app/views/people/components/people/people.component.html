@@ -1,0 +1,172 @@
+<div class="card">
+    <div class="card">
+        <h1 class="title">Personas</h1>
+        <h5 class="subtitle">Listado de Personas</h5>
+
+        <p-table
+            #dtPaciente
+            [value]="listPeople"
+            dataKey="id"
+            [rows]="10"
+            [rowHover]="true"
+            styleClass="p-datatable-gridlines p-datatable-sm"
+            [paginator]="true"
+            responsiveLayout="scroll"
+            scrollDirection="both"
+            [globalFilterFields]="[
+                'telefono',
+                'documento',
+                'primerApellido',
+                'primerNombre',
+                'correo',
+                'fechaserver'
+            ]"
+        >
+            <ng-template pTemplate="caption">
+                <div
+                    class="flex justify-content-between flex-column sm:flex-row"
+                >
+                    <!-- <span class="mr-auto">
+                        <span class="p-input-icon-left mb-2 w-25rem">
+                            <i class="pi pi-search"></i>
+                            <input
+                                pInputText
+                                type="text"
+                                #filter
+                                (input)="onGlobalFilter(dtPaciente, $event)"
+                                placeholder="Ingrese para buscar"
+                                class="w-full"
+                            />
+                        </span>
+                    </span> -->
+                    <span class="ml-auto">
+                        <p-button
+                            class="flex aling-items-center"
+                            (click)="crear()"
+                        >
+                            <div class="flex aling align-items-center">
+                                <div class="plus-bg-white mr-2"></div>
+                                Nuevo
+                            </div>
+                        </p-button>
+                    </span>
+                </div>
+            </ng-template>
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="min-width: 12rem">
+                        <div
+                            class="flex justify-content-center align-items-center"
+                        >
+                            Documento
+                        </div>
+                    </th>
+                    <th style="min-width: 12rem">
+                        <div
+                            class="flex justify-content-center align-items-center"
+                        >
+                            Primer nombre
+                        </div>
+                    </th>
+                    <th style="min-width: 12rem">
+                        <div
+                            class="flex justify-content-center align-items-center"
+                        >
+                            Segundo Nombre
+                        </div>
+                    </th>
+                    <th style="min-width: 12rem">
+                        <div
+                            class="flex justify-content-center align-items-center"
+                        >
+                            Primer Apellido
+                        </div>
+                    </th>
+                    <th style="min-width: 12rem">
+                        <div
+                            class="flex justify-content-center align-items-center"
+                        >
+                            Segundo Apellido
+                        </div>
+                    </th>
+                    <th style="min-width: 12rem">
+                        <div
+                            class="flex justify-content-center align-items-center"
+                        >
+                            Teléfono
+                        </div>
+                    </th>
+                    <th style="min-width: 12rem">
+                        <div
+                            class="flex justify-content-center align-items-center"
+                        >
+                            Correo
+                        </div>
+                    </th>
+                    <th style="min-width: 150px; width: 150px">
+                        <div
+                            class="flex justify-content-center align-items-center"
+                        >
+                            Fecha Ingreso
+                        </div>
+                    </th>
+
+                    <th style="width: 8rem; min-width: 8rem">
+                        <div
+                            class="flex justify-content-center align-items-center"
+                        >
+                            Acciones
+                        </div>
+                    </th>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-row>
+                <tr>
+                    <td>
+                        {{ row.documento }}
+                    </td>
+                    <td>
+                        {{ row.primerNombre }}
+                    </td>
+                    <td>
+                        {{ row.segundoNombre }}
+                    </td>
+                    <td>
+                        {{ row.primerApellido }}
+                    </td>
+                    <td>
+                        {{ row.segundoApellido }}
+                    </td>
+                    <td>
+                        {{ row.telefono }}
+                    </td>
+
+                    <td>
+                        {{ row.correo }}
+                    </td>
+                    <td>
+                        {{ row.fechaserver | date : "dd/MM/yyyy h:mm:ss a" }}
+                    </td>
+                    <td>
+                        <div class="text-center">
+                            <!-- <app-options-table
+                                [items]="items"
+                                (click)="getPaciente(row)"
+                            >
+                            </app-options-table> -->
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="8">Sin pacientes creados.</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+
+<!-- <p-toast key="toastPerfil" position="top-right"></p-toast> -->
+
