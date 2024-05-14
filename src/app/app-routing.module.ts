@@ -17,7 +17,7 @@ const routes: Routes = [
       import('./views/people/people.module').then(
         (m) => m.PeopleModule
       ),
-    canActivate: [LoginGuard],
+    canActivate: [],
   },
 ];
 

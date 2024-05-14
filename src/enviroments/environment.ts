@@ -4,7 +4,9 @@
 
 export const environment = {
     production: false,
-    API: 'https://localhost:7147/api',
+    API: 'https://localhost:7148/api',
+    secret: "55a8e6fd05c6dce7b6f57f2bc165fd03e615c20de01757471eda8f40105e",
+
 };
 
 //en la api

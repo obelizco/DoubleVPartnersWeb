@@ -5,9 +5,10 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
 import { AuthModule } from './views/auth/auth.module';
-import { LocalStorageService } from 'ngx-webstorage';
+import { LocalStorageService, NgxWebstorageModule } from 'ngx-webstorage';
 import { MessageService } from 'primeng/api';
-import { ViewPeopleComponent } from './views/people/components/view-people/view-people/view-people.component';
+import { ViewPeopleComponent } from './views/people/components/view-people/view-people.component';
+import { PERSISTENCE } from './core/providers/utils.provider';
 
 @NgModule({
   declarations: [
@@ -19,10 +20,12 @@ import { ViewPeopleComponent } from './views/people/components/view-people/view-
     HttpClientModule,
     BrowserAnimationsModule,
     AuthModule,
+    NgxWebstorageModule.forRoot({ prefix: 'dvp', separator: '.', caseSensitive: true })
+
   ],
   providers: [
-    LocalStorageService,
-    MessageService
+    MessageService,
+    PERSISTENCE,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   bootstrap: [AppComponent]

@@ -1,5 +1,5 @@
 export interface IAuthUser {
-    NombreUsuario: string;
-    Contrasena: string;
-    IdUsuario: string;
+    nombreUsuario: string;
+    idUsuario: string;
+    token: string;
 }

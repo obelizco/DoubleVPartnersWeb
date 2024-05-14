@@ -1,51 +1,65 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { IAuthModel } from '../models/IAuth.interface';
 import { ComponentStore } from '@ngrx/component-store';
-import { PersistenceService } from './persistence.service';
 import { Observable } from 'rxjs';
+import { IPersistence } from '../models/IPersistence';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService extends ComponentStore<IAuthModel> {
-
+  private userModel: IAuthModel = this.ResetUser();
   constructor(
-    private persistence$: PersistenceService,
-    private router$: Router
+    @Inject('IPersistence') private readonly persistence$: IPersistence
   ) {
     super({
       NombreUsuario: '',
-      Contrasena: '',
+      Token: '',
       IdUsuario: '',
 
     });
-
-    // const isAuth = persistence$.get('auth') as IAuthModel;
-    // if (isAuth) {
-    //   this.setAuth(isAuth);
-    // }
+    this.initStateUser();
+  }
+  private initStateUser(): void {
+    const user = this.persistence$.GetValue<IAuthModel>('user');
+    if (user !== null) {
+      this.addStateUserAndToken(user);
+    }
   }
 
-  readonly setAuth = this.updater((state, payload: IAuthModel) => {
-    const localAuth = {
+  readonly addStateUserAndToken = this.updater((state, stateUser: IAuthModel) => {
+    return {
       ...state,
-      NombreUsuario: payload.NombreUsuario! ?? state.NombreUsuario,
-      Contrasena: payload.Contrasena! ?? state.Contrasena,
-      IdUsuario: payload.IdUsuario! ?? state.IdUsuario
-
-    }
-    this.persistence$.save('auth', localAuth);
-    return localAuth;
+      ...stateUser,
+    };
   });
+
+  public ResetUser(): IAuthModel {
+    return {
+      NombreUsuario: '',
+      Token: '',
+      IdUsuario: '',
+
+    };
+  }
   readonly getId: Observable<number> = this.select((state) => state.IdUsuario);
 
+  readonly getToken: Observable<string> = this.select(
+    (state) => state.Token,
+  );
+  
+  
+  readonly addUser = this.updater((state, user: IAuthModel) => {
+    this.persistence$.SetValue<IAuthModel>('user', user);
+    return {
+      ...state,
+      IdUsuario: user.IdUsuario,
+      NombreUsuario:user.NombreUsuario,
+      Token:user.Token
 
-  // getTokenWithoutObs(): string {
-  //   const tkn = this.persistence$.get('tknDVP');
-  //   return tkn;
-  // }
-  readonly setEnSession = (enSesion: boolean) => {
-    this.persistence$.save('sessionRDVP', enSesion);
-  };
+    };
+
+  });
+
 }

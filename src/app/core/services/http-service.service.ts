@@ -4,6 +4,7 @@ import { environment } from 'src/enviroments/environment';
 import { AuthService } from './auth.service';
 import { Observable, catchError, map, throwError } from 'rxjs';
 import { Validators } from 'src/app/utils/Validators';
+import { IResponse } from '../models/IResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -18,8 +19,11 @@ export class HttpService {
     private _http: HttpClient,
     private readonly auth$: AuthService
   ) {
-    // this.token = this.auth$.getTokenWithoutObs();
-    this.init();
+    this.auth$.getToken.subscribe(res => {
+      console.log(res)
+      this.token = res
+      this.init();
+    });
   }
   init(): void {
     this.headers$ = this.httpOptions();
@@ -33,7 +37,7 @@ export class HttpService {
   }
 
   private jsonAuth = (): HttpHeaders =>
-    new HttpHeaders().set('Authorization', `${this.token}`);
+    new HttpHeaders().set('Authorization', `Bearer ${this.token}`);
 
   private notAuth = () =>
     new HttpHeaders()
@@ -56,11 +60,11 @@ export class HttpService {
       path$ = `${endpoint}${url}`;
     }
 
-    return this._http.get(path$, headers).pipe(
+    return this._http.get<IResponse<T>>(path$, headers).pipe(
       map((res) => {
-        return res;
+        const { data } = res;
+        return data;
       }),
-      // eslint-disable-next-line @typescript-eslint/unbound-method
       catchError(this.handleError)
     );
   }
@@ -80,11 +84,11 @@ export class HttpService {
     if (!Validators.isNullOrUndefined<string>(endpoint)) {
       path$ = `${endpoint}${url}`;
     }
-    return this._http.post(path$, data, requestOptions).pipe(
+    return this._http.post<IResponse<T>>(path$, data, requestOptions).pipe(
       map((res) => {
-        return res;
+        const { data } = res;
+        return data;
       }),
-      // eslint-disable-next-line @typescript-eslint/unbound-method
       catchError(this.handleError)
     );
   }

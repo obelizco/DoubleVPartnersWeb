@@ -1,3 +1,4 @@
+import { IResponse } from './../../../core/models/IResponse';
 import { Injectable } from '@angular/core';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { LoginRepository } from '../class/login.repository';
@@ -7,15 +8,18 @@ import { IAuthParams } from '../models/IAuthParams.interface';
 import { IAuthUser } from '../models/IAuthUser.interface';
 import { HttpService } from 'src/app/core/services/http-service.service';
 import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/enviroments/environment';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LoginService extends LoginRepository {
   public loginForm: FormGroup = this.new();
-
+  public basePatch: string = environment.API
   constructor(private auth$: AuthService,
-    private http$: HttpService,
+    private http$: HttpClient,
     private messageService$: MessageService,
     public router$: Router,
   ) {
@@ -35,30 +39,32 @@ export class LoginService extends LoginRepository {
 
     const authData = this.loginForm.value as IAuthParams;
 
-    this.http$.post<IAuthUser>('/Seguridad', authData).subscribe(
-      (user: IAuthUser) => {
-        this.loginSuccess(user);
+    this.http$.post<IResponse<IAuthUser>>(`${this.basePatch}/Seguridad/Login`, authData).subscribe(
+      ({data}: IResponse<IAuthUser>) => {
+        this.loginSuccess(data);
+        this.messageService$.add({ severity: 'success', summary: 'Success', detail: 'Autenticado',key:'toastLogin',life: 10000 });
+        this.router$.navigateByUrl('/people');
       }
-
     );
+  }
+
+  guardarRegistro(payload: {nombreUsuario:string,contrasena:string}):Observable<any>{
+   return this.http$.post<IResponse<IAuthUser>>(`${this.basePatch}/Seguridad/RegistrarUsuario`, payload);
   }
 
   private loginSuccess = (user: IAuthUser) => {
     const {
-      NombreUsuario,
-      Contrasena,
-      IdUsuario,
-
+      nombreUsuario,
+      idUsuario,
+      token
     } = user;
 
-    this.auth$.setEnSession(true);
-
-    this.auth$.setAuth({
-      NombreUsuario: NombreUsuario,
-      Contrasena: Contrasena,
-      IdUsuario: IdUsuario,
+    this.auth$.addUser({
+      NombreUsuario: nombreUsuario,
+      IdUsuario: idUsuario,
+      Token:token
     });
-
+  
     this.clean();
   };
 

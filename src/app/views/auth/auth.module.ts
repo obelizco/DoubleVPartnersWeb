@@ -5,6 +5,8 @@ import { AuthRoutingModule } from './auth-routing.module';
 import { LoginComponent } from './login/login.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { FormsModule } from '@angular/forms';
+import { PERSISTENCE } from 'src/app/core/providers/utils.provider';
+import { MessageService } from 'primeng/api';
 
 
 
@@ -17,6 +19,8 @@ import { FormsModule } from '@angular/forms';
     AuthRoutingModule,
     SharedModule,
     FormsModule,
-  ]
+  ],
+  providers: [ PERSISTENCE,MessageService]
+
 })
 export class AuthModule { }

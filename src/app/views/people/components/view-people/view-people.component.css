@@ -1,0 +1,32 @@
+.content-form {
+    .ng-touched.ng-invalid {
+        &.p-inputtext,
+        > .p-dropdown {
+            border-color: #e24c4c !important;
+        }
+        &  > .p-multiselect{
+            border-color: #e24c4c !important;
+        }
+    }
+    label {
+        font-weight: 400;
+        font-size: 0.85vw;
+    }
+    input.p-inputtext::placeholder {
+        font-size: 14px !important;
+    }
+    input.p-inputtext,
+    .p-multiselect,.p-dropdown {
+        border: 1px solid rgba(187, 187, 187, 0.35);
+        font-size:14px;
+        &::placeholder,
+        .p-dropdown-trigger,
+        .p-dropdown-label {
+            font-weight: 400;
+            font-size: 14px;
+        }
+    }
+
+
+
+}
