@@ -43,7 +43,7 @@ export class AuthService extends ComponentStore<IAuthModel> {
 
     };
   }
-  readonly getId: Observable<number> = this.select((state) => state.IdUsuario);
+  readonly getId: Observable<string> = this.select((state) => state.IdUsuario);
 
   readonly getToken: Observable<string> = this.select(
     (state) => state.Token,

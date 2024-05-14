@@ -2,7 +2,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular
 import { Injectable } from '@angular/core';
 import { environment } from 'src/enviroments/environment';
 import { AuthService } from './auth.service';
-import { Observable, catchError, map, throwError } from 'rxjs';
+import { Observable, catchError, map, mergeMap, of, switchMap, throwError } from 'rxjs';
 import { Validators } from 'src/app/utils/Validators';
 import { IResponse } from '../models/IResponse';
 
@@ -14,14 +14,17 @@ export class HttpService {
   public basePatch: string = environment.API
   public headers$: HttpHeaders | undefined;
   private token: string | undefined;
-
+  private userId: string | undefined;
   constructor(
     private _http: HttpClient,
     private readonly auth$: AuthService
   ) {
-    this.auth$.getToken.subscribe(res => {
+    this.auth$.getToken.pipe(switchMap((value)=>this.auth$.getId.pipe(mergeMap((userId) => { 
+      return of({ userId: userId,token: value})
+    })))).subscribe(res => {
       console.log(res)
-      this.token = res
+      this.token = res.token;
+      this.userId = res.userId;
       this.init();
     });
   }
@@ -37,7 +40,8 @@ export class HttpService {
   }
 
   private jsonAuth = (): HttpHeaders =>
-    new HttpHeaders().set('Authorization', `Bearer ${this.token}`);
+    new HttpHeaders().set('Authorization', `Bearer ${this.token}`).set('uid',this.userId!);
+
 
   private notAuth = () =>
     new HttpHeaders()

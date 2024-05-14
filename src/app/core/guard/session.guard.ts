@@ -6,7 +6,7 @@ import { AuthService } from '../services/auth.service';
 @Injectable({
   providedIn: 'root'
 })
-export class LoginGuard implements CanActivate {
+export class SessionGuard implements CanActivate {
   constructor(private auth$: AuthService, private router$: Router) {}
 
   canActivate():
@@ -15,8 +15,8 @@ export class LoginGuard implements CanActivate {
       | boolean
       | UrlTree {
       this.auth$.getId.subscribe((res) => {
-          if (res) {
-              this.router$.navigate(['/people']);
+          if (!res) {
+              this.router$.navigate(['/']);
           }
       });
 

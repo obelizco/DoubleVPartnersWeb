@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LoginGuard } from './core/guard/login.guard';
+import { SessionGuard } from './core/guard/session.guard';
 
 const routes: Routes = [
   {
@@ -17,7 +18,7 @@ const routes: Routes = [
       import('./views/people/people.module').then(
         (m) => m.PeopleModule
       ),
-    canActivate: [],
+    canActivate: [SessionGuard],
   },
 ];
 
